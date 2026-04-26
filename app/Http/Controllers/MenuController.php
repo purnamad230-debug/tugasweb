@@ -102,6 +102,13 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
+    // Cek otorisasi
+    if (Gate::denies('admin-only')) {
+        return response()->json(['message' => 'Hanya Admin yang bisa menghapus!'], 403);
+    }
+    // Jika admin, panggil service untuk hapus
+    $this->menuService->delete($id);
+    return response()->json(['message' => 'Data terhapus']);
         try {
             $menu = Menu::findOrFail($id);
 
